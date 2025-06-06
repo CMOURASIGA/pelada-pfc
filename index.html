@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background: #f7f9fc;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .card {
+        background: #fff;
+        max-width: 420px;
+        margin: 30px auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+
+      .logo {
+        width: 80px;
+        height: auto;
+        margin-bottom: 10px;
+        border-radius: 12px;
+        object-fit: contain;
+      }
+
+      h2 {
+        margin: 10px 0 20px;
+        color: #0b2340;
+      }
+
+      label {
+        display: block;
+        text-align: left;
+        margin: 15px 0 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      select, input[type="text"], input[type="number"], input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+
+      button {
+        background-color: #0b2340;
+        color: white;
+        padding: 12px;
+        border: none;
+        width: 100%;
+        font-size: 16px;
+        margin-top: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background-color: #133863;
+      }
+
+      #retorno, #retornoJogo {
+        margin-top: 15px;
+        font-weight: bold;
+        color: green;
+      }
+
+      .resultado {
+        text-align: left;
+        margin-top: 30px;
+      }
+
+      input[type="checkbox"] {
+        margin-right: 8px;
+      }
+
+      /* Estilos para as páginas */
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      /* Estilos para a página de resultados */
+      .results-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .results-section {
+        margin: 20px 0;
+        text-align: left;
+      }
+
+      .results-section h3 {
+        color: #0b2340;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+      }
+
+      .player-stats, .team-stats {
+        margin-bottom: 15px;
+      }
+
+      .player-stats p, .team-stats p {
+        margin: 5px 0;
+      }
+
+      .champion-team {
+        font-weight: bold;
+        font-size: 18px;
+        margin-top: 20px;
+        color: #0b2340;
+      }
+      
+      /* Estilo para o seletor de data na página de resultados */
+      .date-selector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .date-selector input {
+        max-width: 200px;
+        margin-right: 10px;
+      }
+      
+      .date-selector button {
+        max-width: 100px;
+        margin-top: 0;
+        padding: 10px;
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  </head>
+  <body>
+    <div id="registroPage" class="page active">
+      <div class="card">
+        <img src="https://i.imgur.com/ExEJtwR.png" class="logo" alt="PFC Logo">
+        <h2>Pelada PFC ⚽</h2>
+
+        <button onclick="mostrarResultados()">Ver Resultados Completos</button>
+
+        <label>Jogador</label>
+        <select id="jogadorDropdown">
+          <option value="">-- Selecione --</option>
+        </select>
+        <input type="text" id="novoJogador" placeholder="ou digite novo nome">
+
+        <label>Data do Jogo</label>
+        <input type="date" id="data">
+
+        <label>Assistências</label>
+        <select id="assist">
+          <script>
+            // Gerar opções de 0 a 10 para assistências
+            for (let i = 0; i <= 10; i++) { 
+              document.write('<option value="' + i + '">' + i + '</option>');
+            }
+          </script>
+        </select>
+
+        <label>Gols</label>
+        <select id="gols">
+          <script>
+            // Gerar opções de 0 a 15 para gols
+            for (let i = 0; i <= 15; i++) { 
+              document.write('<option value="' + i + '">' + i + '</option>');
+            }
+          </script>
+        </select>
+        
+        <label>Time</label>
+        <select id="time">
+          <option value="">--</option>
+          <option value="T1">T1</option>
+          <option value="T2">T2</option>
+          <option value="T3">T3</option>
+          <option value="T4">T4</option>
+        </select>
+
+        <label>
+          <input type="checkbox" id="capitao"> Capitão
+        </label>
+
+        <button onclick="registrar()">Registrar Jogada</button>
+        <div id="retorno"></div>
+
+        <hr style="margin: 30px 0;">
+
+        <label>Registrar Partida</label>
+        <select id="time1">
+          <option value="">-- Time 1 --</option>
+          <option value="T1">T1</option>
+          <option value="T2">T2</option>
+          <option value="T3">T3</option>
+          <option value="T4">T4</option>
+        </select>
+
+        <input type="number" id="gols1" placeholder="Gols Time 1">
+
+        <select id="time2">
+          <option value="">-- Time 2 --</option>
+          <option value="T1">T1</option>
+          <option value="T2">T2</option>
+          <option value="T3">T3</option>
+          <option value="T4">T4</option>
+        </select>
+
+        <input type="number" id="gols2" placeholder="Gols Time 2">
+
+        <button onclick="registrarJogo()">Registrar Jogo</button>
+        <div id="retornoJogo"></div>
+      </div>
+    </div>
+
+    <div id="resultadosPage" class="page">
+      <div class="card">
+        <img src="https://i.imgur.com/ExEJtwR.png" class="logo" alt="PFC Logo">
+        <h2>Resultados da Pelada PFC</h2>
+        
+        <div class="date-selector">
+          <input type="date" id="dataResultados">
+          <button onclick="carregarResultadosCompletos()">Buscar</button>
+        </div>
+        
+        <div class="results-container">
+          <div class="results-section">
+            <h3>Jogos do Dia</h3>
+            <div id="jogosLista"></div>
+          </div>
+          
+          <div class="results-section">
+            <h3>Estatísticas do Dia</h3>
+            <div class="player-stats">
+              <h4>Estatísticas de Jogadores</h4>
+              <div id="playerStats"></div>
+            </div>
+            
+            <div class="team-stats">
+              <h4>Pontos dos Times</h4>
+              <div id="teamStats"></div>
+            </div>
+            
+            <div class="champion-team">
+              <p>Time Campeão do Dia: <span id="championTeam">-</span></p>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="voltarParaRegistro()">Voltar</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+    <script>
+      // Variáveis globais
+      const jogadorSelect = document.getElementById("jogadorDropdown");
+      const novoJogadorInput = document.getElementById("novoJogador");
+      
+      // Configurações do Flatpickr
+      const flatpickrConfig = {
+          dateFormat: "d/m/Y", // Formato dd/mm/yyyy
+          locale: "pt",        // Define o idioma para português
+          defaultDate: new Date() // Data inicial como o dia atual
+      };
+
+      // Inicializa o Flatpickr para os campos de data
+      const fpData = flatpickr("#data", flatpickrConfig);
+      const fpResultados = flatpickr("#dataResultados", flatpickrConfig);
+
+      // Navegação entre páginas
+      function mostrarResultados() {
+        document.getElementById("registroPage").classList.remove("active");
+        document.getElementById("resultadosPage").classList.add("active");
+        fpResultados.setDate(new Date(), true); // Define a data do Flatpickr para o dia atual ao mostrar resultados
+        carregarResultadosCompletos();
+      }
+      
+      function voltarParaRegistro() {
+        document.getElementById("resultadosPage").classList.remove("active");
+        document.getElementById("registroPage").classList.add("active");
+      }
+
+      // Carregar jogadores no dropdown
+      google.script.run.withSuccessHandler(popularDropdown).getJogadores();
+
+      function popularDropdown(jogadores) {
+        jogadorSelect.innerHTML = "<option value=''>-- Selecione --</option>";
+        jogadores.forEach(nome => {
+          const opt = document.createElement("option");
+          opt.value = nome;
+          opt.innerText = nome;
+          jogadorSelect.appendChild(opt);
+        });
+      }
+
+      // Registrar jogada de um jogador
+      function registrar() {
+        const jogador = novoJogadorInput.value.trim() || jogadorSelect.value;
+        const dataBr = document.getElementById("data").value; // dataBr já está no formato dd/mm/yyyy devido ao Flatpickr
+        const gols = parseInt(document.getElementById("gols").value) || 0;
+        const assist = parseInt(document.getElementById("assist").value) || 0;
+        const time = document.getElementById("time").value; // Este campo não é mais obrigatório
+        const capitao = document.getElementById("capitao").checked;
+
+        // Validação básica: jogador e data são obrigatórios
+        if (!jogador || !dataBr) {
+          document.getElementById("retorno").innerText = "⚠️ Preencha jogador e data!";
+          return;
+        }
+
+        // Conversão correta para ISO com GMT-3
+        const partes = dataBr.split("/");
+        // Note: Month is 0-indexed in Date constructor, force 12:00 PM to avoid timezone issues
+        const dataObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]), 12, 0, 0);
+        const dataISO = dataObj.toISOString();
+
+        const dados = { jogador, data: dataISO, gols, assist, time, capitao }; // Enviar dataISO
+
+        google.script.run.withSuccessHandler(retorno => {
+          document.getElementById("retorno").innerText = retorno;
+        }).registrarJogada(dados);
+
+        // Limpar campos
+        document.getElementById("gols").value = "0"; // Resetar para 0 (seletor)
+        document.getElementById("assist").value = "0"; // Resetar para 0 (seletor)
+        document.getElementById("time").value = ""; // Limpar seleção de time
+        document.getElementById("capitao").checked = false;
+        novoJogadorInput.value = "";
+      }
+
+      // Registrar partida entre times
+      function registrarJogo() {
+        const time1 = document.getElementById("time1").value;
+        const time2 = document.getElementById("time2").value;
+        const gols1 = parseInt(document.getElementById("gols1").value) || 0;
+        const gols2 = parseInt(document.getElementById("gols2").value) || 0;
+        const dataBr = document.getElementById("data").value; // Usar a mesma data do registro de jogada, formato dd/mm/yyyy
+
+        if (!time1 || !time2 || time1 === time2) {
+          document.getElementById("retornoJogo").innerText = "⚠️ Times devem ser diferentes e preenchidos!";
+          return;
+        }
+        
+        // Conversão correta para ISO com GMT-3
+        const partes = dataBr.split("/");
+        const dataObj = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]), 12, 0, 0);
+        const dataISO = dataObj.toISOString();
+
+        const partida = { data: dataISO, time1, gols1, time2, gols2 }; // Enviar dataISO
+        google.script.run.withSuccessHandler(msg => {
+          document.getElementById("retornoJogo").innerText = msg;
+        }).registrarPartida(partida);
+      }
+
+      // Carregar e exibir resultados completos
+      function carregarResultadosCompletos() {
+        const dataResultadosBr = document.getElementById("dataResultados").value; // dataResultadosBr no formato dd/mm/yyyy
+        
+        // Conversão para ISO string antes de enviar para o backend
+        const partesResultados = dataResultadosBr.split("/");
+        const dataObjResultados = new Date(parseInt(partesResultados[2]), parseInt(partesResultados[1]) - 1, parseInt(partesResultados[0]), 12, 0, 0);
+        const dataISOResultados = dataObjResultados.toISOString();
+
+        // Mostrar indicador de carregamento
+        document.getElementById("jogosLista").innerHTML = "<p>Carregando...</p>";
+        document.getElementById("playerStats").innerHTML = "<p>Carregando...</p>";
+        document.getElementById("teamStats").innerHTML = "<p>Carregando...</p>";
+        document.getElementById("championTeam").innerText = "Carregando...";
+        
+        google.script.run
+          .withSuccessHandler(exibirResultadosCompletos)
+          .withFailureHandler(mostrarErro)
+          .getEstatisticasCompletas(dataISOResultados); // Enviar dataISOResultados
+      }
+      
+      function mostrarErro(erro) {
+        console.error("Erro ao carregar resultados:", erro);
+        document.getElementById("jogosLista").innerHTML = "<p>Erro ao carregar dados. Tente novamente.</p>";
+        document.getElementById("playerStats").innerHTML = "";
+        document.getElementById("teamStats").innerHTML = "";
+        document.getElementById("championTeam").innerText = "N/A";
+      }
+
+      function exibirResultadosCompletos(stats) {
+        console.log("Dados recebidos:", stats);
+        
+        // Exibir jogos do dia
+        const divJogos = document.getElementById("jogosLista");
+        if (!stats.jogos || stats.jogos.length === 0) {
+          divJogos.innerHTML = "<p>Nenhum jogo registrado para esta data.</p>";
+        } else {
+          divJogos.innerHTML = "";
+          stats.jogos.forEach((r, i) => {
+            divJogos.innerHTML += `<p><strong>Jogo ${i+1}:</strong> ${r.time1} ${r.gols1} x ${r.gols2} ${r.time2}</p>`;
+          });
+        }
+
+        // Exibir estatísticas de jogadores
+        const divPlayerStats = document.getElementById("playerStats");
+        if (!stats.jogadores || Object.keys(stats.jogadores).length === 0) {
+          divPlayerStats.innerHTML = "<p>Nenhum dado de jogador para esta data.</p>";
+        } else {
+          const jogadoresOrdenados = Object.keys(stats.jogadores).sort((a, b) => {
+            // Ordenar por gols (desc), depois assistências (desc), depois nome (asc)
+            const golsDiff = stats.jogadores[b].gols - stats.jogadores[a].gols;
+            if (golsDiff !== 0) return golsDiff;
+            const assistDiff = stats.jogadores[b].assist - stats.jogadores[a].assist;
+            if (assistDiff !== 0) return assistDiff;
+            return a.localeCompare(b);
+          });
+
+          divPlayerStats.innerHTML = "";
+          jogadoresOrdenados.forEach(jogador => {
+            const s = stats.jogadores[jogador];
+            divPlayerStats.innerHTML += `<p><strong>${jogador}:</strong> Gols: ${s.gols}, Assistências: ${s.assist}, Presenças: ${s.presencas}, Capitão: ${s.capitaoCount > 0 ? s.capitaoCount + 'x' : 'Não'}</p>`;
+          });
+        }
+
+        // Exibir pontos dos times
+        const divTeamStats = document.getElementById("teamStats");
+        divTeamStats.innerHTML = "";
+        ["T1", "T2", "T3", "T4"].forEach(time => {
+          const pontos = stats.times && stats.times[time] !== undefined ? stats.times[time] : 0;
+          divTeamStats.innerHTML += `<p><strong>${time}:</strong> ${pontos} pontos</p>`;
+        });
+
+        // Exibir time campeão
+        document.getElementById("championTeam").innerText = stats.timeCampeao || "Nenhum ponto registrado";
+      }
+    </script>
+  </body>
+</html>
